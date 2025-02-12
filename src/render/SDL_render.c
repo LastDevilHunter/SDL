@@ -2030,9 +2030,9 @@ static bool SDL_UpdateTextureNative(SDL_Texture *texture, const SDL_Rect *rect,
         if (!SDL_LockTexture(native, rect, &native_pixels, &native_pitch)) {
             return false;
         }
-        SDL_ConvertPixels(rect->w, rect->h,
-                          texture->format, pixels, pitch,
-                          native->format, native_pixels, native_pitch);
+        SDL_ConvertPixelsAndColorspace(rect->w, rect->h,
+                                       texture->format, texture->colorspace, 0, pixels, pitch,
+                                       native->format, native->colorspace, 0, native_pixels, native_pitch);
         SDL_UnlockTexture(native);
     } else {
         // Use a temporary buffer for updating
@@ -2043,9 +2043,9 @@ static bool SDL_UpdateTextureNative(SDL_Texture *texture, const SDL_Rect *rect,
             if (!temp_pixels) {
                 return false;
             }
-            SDL_ConvertPixels(rect->w, rect->h,
-                              texture->format, pixels, pitch,
-                              native->format, temp_pixels, temp_pitch);
+            SDL_ConvertPixelsAndColorspace(rect->w, rect->h,
+                                           texture->format, texture->colorspace, 0, pixels, pitch,
+                                           native->format, native->colorspace, 0, temp_pixels, temp_pitch);
             SDL_UpdateTexture(native, rect, temp_pixels, temp_pitch);
             SDL_free(temp_pixels);
         }
